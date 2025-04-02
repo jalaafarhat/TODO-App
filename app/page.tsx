@@ -1,10 +1,10 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
     <>
       <div className="flex justify-center items-center h-screen">
-        <h1 className=".body">ToDo App</h1>
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">To-Do List</h1>
+        </div>
       </div>
     </>
   );
