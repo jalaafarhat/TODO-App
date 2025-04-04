@@ -1,5 +1,5 @@
 "use client";
-import { Plus, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react"; //used lucide-react for better UI
 import { Todo } from "@/src/types";
 import { useEffect, useState } from "react";
 
@@ -25,19 +25,29 @@ export default function TodoModal({
     initialValues?.description || ""
   );
   const [completed, setCompleted] = useState(initialValues?.completed || false);
+
   // Reset form when initialValues change (for edit mode)
   useEffect(() => {
+    // Reset form when modal opens/closes or initialValues change
     if (initialValues) {
+      // Edit mode - populate fields
       setTitle(initialValues.title || "");
       setDescription(initialValues.description || "");
       setCompleted(initialValues.completed || false);
+    } else {
+      // New task mode - clear fields
+      setTitle("");
+      setDescription("");
+      setCompleted(false);
     }
-  }, [initialValues]);
+  }, [initialValues, isOpen]);
+
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ title, description, completed });
   };
+
   // Don't render if modal is closed
   if (!isOpen) return null;
 

@@ -1,5 +1,5 @@
 "use client";
-import { Trash2, Pencil, Calendar } from "lucide-react";
+import { Trash2, Pencil, Calendar } from "lucide-react"; //used lucide-react for better UI
 import { Todo } from "@/src/types";
 
 // Props interface for TodoCard component
