@@ -19,12 +19,13 @@ const writeTodos = (todos: any[]) => {
 // Delete todo by ID
 export async function DELETE(
   request: Request,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> } // Add Promise type
 ) {
-  const { params } = context;
+  const { id } = await context.params; // Await the params first
   const todos = readTodos();
-  // Filter out target todo using numeric ID
-  const updated = todos.filter((todo: any) => todo.id !== Number(params.id));
+
+  // Filter using the resolved ID
+  const updated = todos.filter((todo: any) => todo.id !== Number(id));
   writeTodos(updated);
   return NextResponse.json({ message: "Deleted" });
 }
