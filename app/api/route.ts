@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-// Correct file path (root directory)
-const filePath = path.join(process.cwd(), "todos.json");
+//json file path
+const filePath = path.join(process.cwd(), "data", "todos.json");
 
 // Function to read todos.json
 const readTodos = () => {
@@ -30,11 +30,24 @@ const writeTodos = (todos: any[]) => {
 
 // Handle GET request (fetch all todos)
 export async function GET() {
-  const todos = readTodos();
-  return NextResponse.json(todos);
+  try {
+    const dataDir = path.join(process.cwd(), "data");
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    const todos = readTodos();
+    return NextResponse.json(todos);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to read todos." },
+      { status: 500 }
+    );
+  }
 }
 
 // Handle POST request (add a new todo)
+//check if all the fields are valid , if yes we add a new one and if there is error we throw exception
 export async function POST(req: Request) {
   try {
     const { title, description, completed, createdAt } = await req.json();

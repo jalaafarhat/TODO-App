@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Plus, Loader2, Calendar } from "lucide-react"; // Import Plus icon from lucide-react
+import { Trash2, Pencil, Loader2, Plus, Calendar } from "lucide-react"; // Import icons from lucide-react for a better UI
 
 export default function Home() {
+  // States for form inputs, todos list, modal, and loading indicators
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [completed, setCompleted] = useState(false);
@@ -20,6 +21,7 @@ export default function Home() {
     setLoading(false);
   };
 
+  // Load todos on component mount
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -29,24 +31,41 @@ export default function Home() {
     e.preventDefault();
     setAdding(true);
 
-    const res = await fetch("/api", {
-      method: "POST",
+    const method = editingId ? "PUT" : "POST";
+    const url = editingId ? `/api/${editingId}` : "/api";
+
+    const res = await fetch(url, {
+      method,
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title,
-        description,
-        completed,
-        createdAt: new Date().toISOString(), // Add this line to include the timestamp
-      }),
+      body: JSON.stringify({ title, description, completed }),
     });
 
     if (res.ok) {
       setTitle("");
       setDescription("");
       setCompleted(false);
-      setIsModalOpen(false); // Close modal after submission
+      setIsModalOpen(false);
+      setEditingId(null); // Reset
       fetchTodos();
     }
+
+    setAdding(false);
+  };
+
+  // Delete a todo by ID
+  const handleDelete = async (id: number) => {
+    await fetch(`/api/${id}`, { method: "DELETE" });
+    fetchTodos(); // Refresh
+  };
+
+  // Load a todo into the form for editing
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const handleEdit = (todo: any) => {
+    setTitle(todo.title);
+    setDescription(todo.description);
+    setCompleted(todo.completed);
+    setIsModalOpen(true);
+    setEditingId(todo.id);
   };
 
   return (
@@ -55,7 +74,10 @@ export default function Home() {
 
       {/* Floating Add Button , i installed the + sign from lucide-react for better UI  */}
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          setIsModalOpen(true);
+          setEditingId(null); // Reset editing state when opening modal
+        }}
         className="fixed bottom-6 right-6 bg-blue-500 text-white w-16 h-16 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center"
       >
         <Plus size={32} strokeWidth={3} />
@@ -65,7 +87,9 @@ export default function Home() {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-amber-50 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4">Add New Todo</h2>
+            <h2 className="text-xl font-bold mb-4">
+              {editingId ? "Update Todo" : "Add New Todo"}
+            </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <input
                 type="text"
@@ -93,7 +117,10 @@ export default function Home() {
               <div className="flex justify-between">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setEditingId(null); // Clear editing state on cancel
+                  }}
                   className="bg-gray-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
@@ -102,7 +129,7 @@ export default function Home() {
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded"
                 >
-                  Add Todo
+                  {editingId ? "Update Todo" : "Add Todo"}
                 </button>
               </div>
             </form>
@@ -131,7 +158,7 @@ export default function Home() {
             </h2>
             <p className="text-gray-600">{todo.description}</p>
 
-            {/* Add this block to display the date */}
+            {/* Add this block to display the date we added the to-do task*/}
             {todo.createdAt && (
               <div className="flex items-center text-xs text-gray-400 mt-1 mb-2">
                 <Calendar className="w-3 h-3 mr-1" />
@@ -146,6 +173,27 @@ export default function Home() {
             >
               {todo.completed ? "Completed" : "Not Completed"}
             </span>
+            <div className="flex gap-2 mt-2 justify-end">
+              {/* Delete Button */}
+              <button
+                onClick={() => handleDelete(todo.id)}
+                className="text-red-500 hover:text-red-700 flex items-center"
+                title="Delete"
+              >
+                <Trash2 size={18} className="mr-1" />
+                <span>Delete</span>
+              </button>
+
+              {/* Edit Button */}
+              <button
+                onClick={() => handleEdit(todo)}
+                className="text-blue-500 hover:text-blue-700 flex items-center"
+                title="Edit"
+              >
+                <Pencil size={18} className="mr-1" />
+                <span>Edit</span>
+              </button>
+            </div>
           </li>
         ))}
       </ul>
