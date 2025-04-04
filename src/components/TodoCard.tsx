@@ -2,15 +2,18 @@
 import { Trash2, Pencil, Calendar } from "lucide-react";
 import { Todo } from "@/src/types";
 
+// Props interface for TodoCard component
 interface TodoCardProps {
   todo: Todo;
-  onDelete: (id: number) => void;
-  onEdit: (todo: Todo) => void;
+  onDelete: (id: number) => void; // Delete handler callback
+  onEdit: (todo: Todo) => void; // Edit handler callback
 }
 
+// TodoCard component, renders a single todo item
 export default function TodoCard({ todo, onDelete, onEdit }: TodoCardProps) {
   return (
     <li className="p-4 bg-white border rounded shadow-md">
+      {/* Todo title with completion styling */}
       <h2
         className={`font-bold ${
           todo.completed ? "line-through text-gray-500" : ""

@@ -3,6 +3,7 @@ import { Plus, Loader2 } from "lucide-react";
 import { Todo } from "@/src/types";
 import { useEffect, useState } from "react";
 
+// Type definition for component props
 interface TodoModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,12 +19,13 @@ export default function TodoModal({
   initialValues,
   isSubmitting,
 }: TodoModalProps) {
+  // Form state management
   const [title, setTitle] = useState(initialValues?.title || "");
   const [description, setDescription] = useState(
     initialValues?.description || ""
   );
   const [completed, setCompleted] = useState(initialValues?.completed || false);
-
+  // Reset form when initialValues change (for edit mode)
   useEffect(() => {
     if (initialValues) {
       setTitle(initialValues.title || "");
@@ -31,12 +33,12 @@ export default function TodoModal({
       setCompleted(initialValues.completed || false);
     }
   }, [initialValues]);
-
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({ title, description, completed });
   };
-
+  // Don't render if modal is closed
   if (!isOpen) return null;
 
   return (
@@ -45,6 +47,7 @@ export default function TodoModal({
         <h2 className="text-xl font-bold mb-4">
           {initialValues?.id ? "Update Todo" : "Add New Todo"}
         </h2>
+        {/* Todo form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
@@ -77,6 +80,7 @@ export default function TodoModal({
             >
               Cancel
             </button>
+            {/* Submit button with loading state */}
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded"
