@@ -5,6 +5,10 @@ A full-stack todo list application with CRUD operations, built with Next.js and 
 ![Screenshot (57)](https://github.com/user-attachments/assets/f09fb837-2ac5-46a1-9386-6688b67a3c26)
 ![Screenshot (58)](https://github.com/user-attachments/assets/9ef9dac5-0026-415b-865a-3af1091fc287)
 ![Screenshot (56)](https://github.com/user-attachments/assets/1d8e0319-e638-4a27-a255-320776405684)
+![Screenshot (59)](https://github.com/user-attachments/assets/fe1b72ef-c778-4e20-b9c1-7dc257b9b1c3)
+![Screenshot (54)](https://github.com/user-attachments/assets/6e82c33f-dbbd-468e-a6b9-eea0276650d1)
+
+
 
 
 ## Features
