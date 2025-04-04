@@ -21,9 +21,9 @@ A full-stack todo list application with CRUD operations, built with Next.js and 
 - 🗑️ Delete confirmation
 - 📱 Responsive design
 
-  ## Start the development server
-  - npm run dev
-  - Open http://localhost:3000 in your browser
+## Start the development server
+- npm run dev
+- Open http://localhost:3000 in your browser
  
 ## Database Migration Guide
 Current Architecture (JSON File)
